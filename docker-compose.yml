@@ -1,0 +1,83 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: api
+    hostname: api
+    ports:
+      - '8000:8000'
+    tty: true
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/home
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    networks:
+      - backend
+  db:
+    image: mysql:8.1
+    container_name: db
+    hostname: db
+    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_general_ci']
+    environment:
+      MYSQL_ROOT_PASSWORD: strongrootpassword
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    networks:
+      - backend
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - backend
+  redis:
+    image: redis:latest
+    command: redis-server --save 20 1 --loglevel warning
+    container_name: redis
+    hostname: redis
+    volumes:
+      - redis-data:/data
+      - redis-config:/usr/local/etc/redis/redis.conf
+    networks:
+      - backend
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+volumes:
+  dbdata:
+    driver: local
+  redis-data:
+    driver: local
+  redis-config:
+    driver: local
+networks:
+  backend:
+    driver: bridge
