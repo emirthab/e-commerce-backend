@@ -17,6 +17,6 @@ class Serializable():
                 if relationship.uselist:  # One-to-Many or Many-to-Many relationship
                     d[relationship.key] = [item.serialize() for item in value]
                 else:  # Many-to-One or One-to-One relationship
-                    d[relationship.key] = value.serialize()
+                    d[relationship.key] = value.serialize() if value else None
 
         return d

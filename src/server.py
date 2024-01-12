@@ -73,8 +73,8 @@ def init_cache() -> None:
 
 def create_app() -> FastAPI:
     app_ = FastAPI(
-        title="Graduation Project",
-        description="Uskudar University Computer Engineering",
+        title="Recommender Engine",
+        description="Uskudar University Computer Engineering graduation project<br/><br/>Emir Taha BAHÇECİ<br/>Erkan Ince<br/>Alihan Tursun",
         version="1.0.0",
         docs_url=None if config.ENV == "production" else "/docs",
         redoc_url=None if config.ENV == "production" else "/redoc",
@@ -87,4 +87,5 @@ def create_app() -> FastAPI:
     return app_
 
 # Load Firebase Connection
+import core.firebase.load
 app = create_app()

@@ -5,6 +5,7 @@ from .permission import (
     IsAdmin,
     AllowAll,    
 )
+from .translate_json_response import TranslateJsonResponse
 
 __all__ = [
     "Logging",
@@ -12,4 +13,5 @@ __all__ = [
     "IsAuthenticated",
     "IsAdmin",
     "AllowAll",
+    "TranslateJsonResponse",
 ]

@@ -10,8 +10,8 @@ class Config(BaseSettings):
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
     
-    WRITER_DB_URL: str = f"mysql+aiomysql://user:pass@db:3306/database"
-    READER_DB_URL: str = f"mysql+aiomysql://user:pass@db:3306/database"
+    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
+    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
     
     JWT_SECRET_KEY: str = "fastapi"
     JWT_ALGORITHM: str = "HS256"
@@ -25,27 +25,27 @@ class Config(BaseSettings):
     REDIS_PASSWORD: str = ""
     
     OTP_CODE_EXPIRY_MINUTE: int = 5
-    SMTP_HOST: str = ""
+    SMTP_HOST: str = "smtp.office365.com"
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
     SMTP_FROM_ADDRESS: str = ""
     
-    FIREBASE_STORAGE_URL: str = ""
+    FIREBASE_STORAGE_URL: str = "https://storage.googleapis.com/new-york-42e41.appspot.com/"
 
 class DevelopmentConfig(Config):
-    WRITER_DB_URL: str = f""
-    READER_DB_URL: str = f""
+    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
+    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
 
 
 class LocalConfig(Config):
-    WRITER_DB_URL: str = f"mysql+aiomysql://user:pass@20.79.221.139:3306/database"
-    READER_DB_URL: str = f"mysql+aiomysql://user:pass@20.79.221.139:3306/database"
+    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@0.0.0.0:3306/newyork"
+    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@0.0.0.0:3306/newyork"
     
-    CELERY_BROKER_URL: str = "amqp://user:bitnami@20.79.221.139:5672/"
-    CELERY_BACKEND_URL: str = "redis://127.0.0.1"
+    CELERY_BROKER_URL: str = "amqp://user:bitnami@0.0.0.0:5672/"
+    CELERY_BACKEND_URL: str = "redis://0.0.0.0:6379"
     
-    REDIS_HOST: str = "127.0.0.1"
+    REDIS_HOST: str = "0.0.0.0"
     REDIS_PORT: int = 6379
     REDIS_USER: str = ""
     REDIS_PASSWORD: str = ""
@@ -53,8 +53,8 @@ class LocalConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG: bool = False
-    WRITER_DB_URL: str = f"mysql+aiomysql://user:pass@db:3306/database"
-    READER_DB_URL: str = f"mysql+aiomysql://user:pass@db:3306/database"
+    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
+    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@db:3306/newyork"
 
 
 def get_config():

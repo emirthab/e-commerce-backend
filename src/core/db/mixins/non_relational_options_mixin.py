@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy import inspect
+import sys
 
 
 class NonRelationalOptions():

@@ -13,9 +13,11 @@ services:
     links:
       - db
       - redis
+      - rabbitmq
     depends_on:
       - db
       - redis
+      - rabbitmq
     volumes:
       - .:/home
       - "/etc/localtime:/etc/localtime:ro"
@@ -31,9 +33,9 @@ services:
       MYSQL_ROOT_PASSWORD: strongrootpassword
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_RANDOM_ROOT_PASSWORD: 1
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: newyork
+      MYSQL_USER: newyork
+      MYSQL_PASSWORD: newyork123
     ports:
       - "3306:3306"
     volumes:
@@ -71,6 +73,18 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+  rabbitmq:
+    image: "rabbitmq:management"
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - backend
 volumes:
   dbdata:
     driver: local
