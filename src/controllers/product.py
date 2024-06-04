@@ -34,7 +34,7 @@ async def get_product_with_filters(
         category_id: int = 0,
         search: Optional[str] = '',
         order_by: ProductOrderType = ProductOrderType.suggested,
-        attrs: Dict[str, Union[Any, List[Any]]] = Query({}, example={'a_1':1, 'a_2_min':10, 'a_2_max': 1000, 'a_3': [2, 3, 4]})
+        # attrs: Dict[str, Union[Any, List[Any]]] = Query({}, example={'a_1':1, 'a_2_min':10, 'a_2_max': 1000, 'a_3': [2, 3, 4]})
 ):
     attributes = {key: value[0] if len(value) == 1 else value for key, value in attrs.items() if key.startswith("a_")}
     total_items, products = await ProductServices().get_products_with_filter(page=page, per_page=per_page, category_id=category_id, search=search, order_by=order_by, attributes=attributes)

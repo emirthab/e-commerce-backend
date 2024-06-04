@@ -9,14 +9,17 @@ from core.fastapi.dependencies import (
 from services import CategoryServices
 from schemas import CategorySchema, ProductDetailSchema
 from services import ProductServices
-
+from models import Product, Event, EventType
+from services import EventServices
+from config import config
 # Pytohn imports
 from typing import List
 from openai import OpenAI
+import os
+
+import json
 
 api_url = "https://api.openai.com/v1/chat/completions"
-
-api_key = ""
 
 prompt = """
 First of all, I will give you a categories in json format.
@@ -42,6 +45,7 @@ do not write anything just give me the recommended products in json format
 "If the products in the event_list do not all have the same category_id, suggest at least one similar product in the same color and size for each category_id."
 """
 
+api_key = os.getenv("gpt_api_key", "")
 client = OpenAI(api_key=api_key)
 
 router = APIRouter()
@@ -49,36 +53,82 @@ router = APIRouter()
 
 @router.get(
     "/{user_id}",
-    # response_model=FileSchema,
-    # dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 async def recommend(request: Request, user_id: int):
     categories: List[CategorySchema] = await CategoryServices().get_category_tree()
-    products: List[ProductDetailSchema] = await ProductServices().get_all_product_details()
+    products: List[Product] = await ProductServices().get_all_product_details()
 
     parsed_products = []
     for product in products:
-        
+
         attrs = {}
-        
+
         for attr in product.attributes:
             attrs[attr.name] = attr.value
-            
+
         parsed_products.append({
             "id": product.id,
             "title": product.title,
             "description": product.description,
             "category_id": product.category_id,
             "price": product.price,
-            **attr
+            **attrs
+        })
+
+    events = [
+        {
+            "event_type": "purchased",
+            "products": []
+        },
+        {
+            "event_type": "added_to_favorites",
+            "products": []
+        },
+        {
+            "event_type": "added_to_cart",
+            "products": []
+        },
+        {
+            "event_type": "details_viewed",
+            "products": []
+        }
+    ]
+
+    _events : List[Event] = await EventServices().get_user_events(user_id=user_id)
+    
+    for ev in _events:
+        idx = 0
+        if ev.event_type == EventType.favorite:
+            idx = 1
+        elif ev.event_type == EventType.add_cart:
+            idx = 2
+        elif ev.event_type == EventType.detail_open:
+            idx = 3
+        
+        _attrs = {}
+
+        for attr in ev.product.attributes:
+            _attrs[attr.name] = attr.value
+            
+        events[idx]["products"].append({
+            "id": ev.product.id,
+            "title": ev.product.title,
+            "description": ev.product.description,
+            "category_id": ev.product.category_id,
+            "price": ev.product.price,
+            **attrs
         })
         
-    return products
-    # completion = client.chat.completions.create(model="gpt-4o",messages=[
-    # {"role":"system","content":prompt},
-    # {"role":"user","content":categories},
-    # {"role":"user","content":products},
-    # {"role":"user","content":events},
-    #   ],)
+    completion = client.chat.completions.create(model="gpt-4o",messages=[
+    {"role":"system","content":str(prompt)},
+    {"role":"user","content":str(categories)},
+    {"role":"user","content":str(products)},
+    {"role":"user","content":str(events)},
+      ],)
 
-    # return(completion.choices[0].message.content)
+    result = completion.choices[0].message.content
+    result = result.replace("```json", "")
+    result = result.replace("```", "")
+    print(result)
+    return(json.loads(result))
+    

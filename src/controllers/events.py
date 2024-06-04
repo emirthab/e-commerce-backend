@@ -10,7 +10,7 @@ from core.fastapi.dependencies import (
 from schemas import (
     Event,
     CreateEventRequest,
-    Langs
+    Langs,
 )
 
 from models import EventType
@@ -19,7 +19,7 @@ from services import EventServices
 # Python imports
 from typing import List
 
-router = APIRouter(route_class=LocalizationRoute)
+router = APIRouter()
 
 
 @router.post(

@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 
 
 class Config(BaseSettings):
+    GPT_API_KEY: str = ""
     ENV: str = "development"
     DEBUG: bool = True
     
