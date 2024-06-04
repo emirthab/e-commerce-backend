@@ -61,15 +61,15 @@ async def recommend(request: Request, user_id: int):
         
         attrs = {}
         
-        for attr in product["attributes"]:
-            attrs[attr["attribute"]["name"]] = attrs[attr["attribute_value"]["name"]]
+        for attr in product.attributes:
+            attrs[attr.name] = attr.value
             
         parsed_products.append({
-            "id": product["id"],
-            "title": product["title"],
-            "description": product["description"],
-            "category_id": product["category_id"],
-            "price": product["price"],
+            "id": product.id,
+            "title": product.title,
+            "description": product.description,
+            "category_id": product.category_id,
+            "price": product.price,
             **attr
         })
         
