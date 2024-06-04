@@ -56,6 +56,23 @@ async def recommend(request: Request, user_id: int):
     categories: List[CategorySchema] = await CategoryServices().get_category_tree()
     products: List[ProductDetailSchema] = await ProductServices().get_all_product_details()
 
+    parsed_products = []
+    for product in products:
+        
+        attrs = {}
+        
+        for attr in product["attributes"]:
+            attrs[attr["attribute"]["name"]] = attrs[attr["attribute_value"]["name"]]
+            
+        parsed_products.append({
+            "id": product["id"],
+            "title": product["title"],
+            "description": product["description"],
+            "category_id": product["category_id"],
+            "price": product["price"],
+            **attr
+        })
+        
     return products
     # completion = client.chat.completions.create(model="gpt-4o",messages=[
     # {"role":"system","content":prompt},
