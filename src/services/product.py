@@ -89,7 +89,7 @@ class ProductServices:
             .options(joinedload(Product.attributes).joinedload(ProductAttribute.attribute_value))
             .options(joinedload(Product.attributes).joinedload(ProductAttribute.attribute))
             )
-        products : List[Product] = (await session.execute(query)).scalars().all()
+        products : List[Product] = (await session.execute(query)).scalars().unique().all()
 
         return products
 
