@@ -54,7 +54,7 @@ router = APIRouter()
 )
 async def recommend(request: Request, user_id: int):
     categories: List[CategorySchema] = await CategoryServices().get_category_tree()
-    products: List[ProductDetailSchema] = ProductServices().get_all_product_details()
+    products: List[ProductDetailSchema] = await ProductServices().get_all_product_details()
 
     return products
     # completion = client.chat.completions.create(model="gpt-4o",messages=[
