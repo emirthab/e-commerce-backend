@@ -39,8 +39,8 @@ class DevelopmentConfig(Config):
 
 
 class LocalConfig(Config):
-    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@0.0.0.0:3306/newyork"
-    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@0.0.0.0:3306/newyork"
+    WRITER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@95.214.177.251:3306/newyork"
+    READER_DB_URL: str = f"mysql+aiomysql://newyork:newyork123@95.214.177.251:3306/newyork"
     
     CELERY_BROKER_URL: str = "amqp://user:bitnami@0.0.0.0:5672/"
     CELERY_BACKEND_URL: str = "redis://0.0.0.0:6379"

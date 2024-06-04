@@ -23,6 +23,7 @@ firebase-admin = "^6.2.0"
 pydantic-settings = "^2.0.2"
 python-multipart = "^0.0.6"
 fastapi = {git = "https://github.com/emirthab/fastapi.git", branch = "development"}
+openai = "^1.31.0"
 
 [tool.poetry.dev-dependencies]
 behave = "^1.2.6"

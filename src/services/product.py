@@ -81,6 +81,17 @@ class ProductServices:
             raise ProductNotFound
 
         return product
+    
+    async def get_all_product_details(self) -> List[Product]:
+        query = (
+            select(Product)
+            .options(joinedload(Product._images))
+            .options(joinedload(Product.attributes).joinedload(ProductAttribute.attribute_value))
+            .options(joinedload(Product.attributes).joinedload(ProductAttribute.attribute))
+            )
+        products : List[Product] = (await session.execute(query)).scalars().all()
+
+        return products
 
     @standalone_session
     async def create_product(self, category_id: int, schema: CreateProductRequestSchema) -> Product:
