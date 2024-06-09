@@ -71,7 +71,7 @@ async def recommend(request: Request, user_id: int):
             "title": product.title,
             "description": product.description,
             "category_id": product.category_id,
-            "price": product.price,
+            "price": float(product.price),
             **attrs
         })
 
@@ -115,17 +115,18 @@ async def recommend(request: Request, user_id: int):
             "title": ev.product.title,
             "description": ev.product.description,
             "category_id": ev.product.category_id,
-            "price": ev.product.price,
-            **attrs
+            "price": float(ev.product.price),
+            **_attrs
         })
         
     completion = client.chat.completions.create(model="gpt-4o",messages=[
     {"role":"system","content":str(prompt)},
     {"role":"user","content":str(categories)},
-    {"role":"user","content":str(products)},
+    {"role":"user","content":str(parsed_products)},
     {"role":"user","content":str(events)},
       ],)
 
+  
     result = completion.choices[0].message.content
     result = result.replace("```json", "")
     result = result.replace("```", "")
